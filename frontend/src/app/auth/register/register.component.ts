@@ -1,20 +1,19 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Route, Router } from '@angular/router';
 import { AuthService } from '../../service/auth.service';
-import { Router } from '@angular/router';
-import { error } from 'node:console';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  styleUrl: './register.component.css'
 })
 export class RegisterComponent {
 
   registrationForm: FormGroup;
   errorMessage: string | null = null;
   successMessage: string | null = null;
-  image: File | null = null;
+  image: File | null = null
 
   constructor(
     private fb: FormBuilder,
@@ -22,31 +21,32 @@ export class RegisterComponent {
     private router: Router
   ) {
 
+
     this.registrationForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required],
-      phone: ['', Validators.required],
-      gender: ['', Validators.required],
-      address: ['', Validators.required],
-      dob: ['', Validators.required]
-    }, 
-    {
-      validators: this.passwordMatcherValidator 
-    });
+      phone: [''],
+      address: [''],
+      dob: [''],
+      gender: [''],
 
+    },
+      { validator: this.passwordMatchValidator }
+
+    );
   }
-
-  passwordMatcherValidator(formGroup: FormGroup): { [key: string]: boolean } | null {
+  passwordMatchValidator(formGroup: FormGroup) {
     const password = formGroup.get('password')?.value;
-    const confirmedPassword = formGroup.get('confirmPassword')?.value;
-    return password === confirmedPassword ? null : { mismatch: true };
+    const ConfirmedPassword = formGroup.get('confirmPassword')?.value;
+    return password === ConfirmedPassword ? null : { mismatch: true }
   }
 
-  // File selected method
+
+  //File Selection method
   onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
+    const input = event.target as HTMLInputElement; // insure the correct formate
     if (input?.files && input.files[0]) {
       this.image = input.files[0];
     }
@@ -54,30 +54,32 @@ export class RegisterComponent {
 
   onSubmit() {
     if (this.registrationForm.invalid) {
-      console.log("Check the inputs");
-      this.errorMessage = 'Check inputs, there may be some issues.';
       return;
     }
-
     if (!this.image) {
-      this.errorMessage = 'Please select an image';
+      this.errorMessage = 'Please select an image.';
       return;
     }
 
-    const { name, email, password, phone, address, dob, gender,image } = this.registrationForm.value;
+
+    const { name, email, password, phone, address, dob, gender, image } = this.registrationForm.value;
 
     this.authService.register(
       { name, email, password, phone, address, dob, gender, image: '' },
       this.image
+
     ).subscribe({
-      next: () => {
-        this.successMessage = 'Registration complete. Check your email to activate your account.';
+      next: AuthenticatorResponse => {
+        this.successMessage = 'Registration Successful! Pleace Check your email to active your account';
         this.router.navigate(['login']);
       },
-      error: () => {
-        console.log(error);
-        this.errorMessage = "Registration failed,";
+      error: error => {
+        this.errorMessage = 'Registration failed. Pleace try again!';
       }
     });
+
+
+
   }
+
 }
