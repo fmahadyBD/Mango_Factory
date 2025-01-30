@@ -1,0 +1,54 @@
+<div class="container mt-4">
+  <h2>User Table</h2>
+  <table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+      <tr>
+        <th>Profile</th>  <!-- New column for profile image -->
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td class="text-center align-middle">
+          <img [src]= "'http://localhost:8080/images/users/' + user.image"
+               alt="Profile picture" 
+               class="rounded-circle"
+               style="width: 40px; height: 40px; object-fit: cover;">
+        </td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.phone }}</td>
+        <td>{{ user.role }}</td>
+        <td>
+          <button class="btn btn-primary btn-sm mr-6">Edit</button>
+          <button class="btn btn-danger btn-sm">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+
+
+
+
+
+  <!-- Pagination Controls -->
+  <nav aria-label="Page navigation" *ngIf="totalItems > itemsPerPage">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <a class="page-link" (click)="onPageChange(currentPage - 1)" [class.disabled]="currentPage === 1">Previous</a>
+      </li>
+      <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index"
+          [class.active]="currentPage === i + 1">
+        <a class="page-link" (click)="onPageChange(i + 1)">{{ i + 1 }}</a>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <a class="page-link" (click)="onPageChange(currentPage + 1)" [class.disabled]="currentPage === totalPages">Next</a>
+      </li>
+    </ul>
+  </nav>
+</div>

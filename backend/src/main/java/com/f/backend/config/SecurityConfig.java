@@ -58,7 +58,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                     .authorizeHttpRequests(req ->                            
-                    req.requestMatchers("/**").permitAll()             )
+                    req.requestMatchers("/**","/image/**").permitAll()             )
                 .userDetailsService(userService)
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
