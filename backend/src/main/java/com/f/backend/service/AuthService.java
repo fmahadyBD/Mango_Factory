@@ -9,7 +9,9 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +26,8 @@ import com.f.backend.repository.UserRepository;
 import com.f.backend.request.LoginForm;
 import com.f.backend.request.NewUserRegistrationRequest;
 import com.f.backend.response.AuthenticationResponse;
+
+import org.springframework.security.core.AuthenticationException;
 
 import jakarta.mail.MessagingException;
 
@@ -108,17 +112,57 @@ public class AuthService {
 
     }
 
-    public AuthenticationResponse authenticate(LoginForm requet) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(requet.getEmail(), requet.getPassword()));
-        User user = userRepository.findByEmail(requet.getEmail()).orElseThrow();
+    // public AuthenticationResponse authenticate(LoginForm requet) {
 
-        String jwt = jwtService.generateToken(user);
-        removedAllTokenByUser(user);
 
-        savedToken(jwt, user);
-        return new AuthenticationResponse(jwt, "User login Successfull");
+        
+    //     authenticationManager.authenticate(
+    //             new UsernamePasswordAuthenticationToken(requet.getEmail(), requet.getPassword()));
+    //     User user = userRepository.findByEmail(requet.getEmail()).orElseThrow();
+
+    //     String jwt = jwtService.generateToken(user);
+    //     removedAllTokenByUser(user);
+
+    //     savedToken(jwt, user);
+    //     return new AuthenticationResponse(jwt, "User login Successfull");
+    // }
+
+
+        public AuthenticationResponse authenticate(LoginForm request) {
+
+
+        if (request == null || request.getEmail() == null || request.getPassword() == null) {
+            throw new IllegalArgumentException("Email and password must not be null");
+        }
+
+        try {
+            
+            // Authenticate the user
+            authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            );
+
+            // Find the user in the repository
+            User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + request.getEmail()));
+
+            // Generate JWT token
+            String jwt = jwtService.generateToken(user);
+
+            // Revoke all existing tokens for the user (if applicable)
+            removedAllTokenByUser(user);
+
+            // Save the new token
+            savedToken(jwt, user);
+
+            // Return the authentication response
+            return new AuthenticationResponse(jwt, "User login successful");
+        } catch (AuthenticationException e) {
+            // Handle authentication failures (e.g., invalid credentials)
+            throw new BadCredentialsException("Invalid email or password");
+        }
     }
+
 
     public String activeUser(long id) {
 

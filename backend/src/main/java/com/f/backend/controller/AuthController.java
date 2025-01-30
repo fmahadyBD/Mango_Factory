@@ -25,15 +25,6 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    // @PostMapping("/register")
-    // public ResponseEntity<AuthenticationResponse> register(
-    //         @RequestPart(value = "new-user") @Valid NewUserRegistrationRequest newUser,
-    //         @RequestPart(value = "image") MultipartFile file) throws IOException {
-
-    //             System.out.println("IN controller");
-    //     return ResponseEntity.ok(authService.register(newUser, file));
-    // }
-
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(
             @RequestBody @Valid LoginForm loginForm) {
@@ -41,20 +32,18 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-public ResponseEntity<AuthenticationResponse> register(
-        @RequestPart(value = "user") @Valid NewUserRegistrationRequest newUser,
-        @RequestPart(value = "image", required = false) MultipartFile file) throws IOException {
+    public ResponseEntity<AuthenticationResponse> register(
+            @RequestPart(value = "user") @Valid NewUserRegistrationRequest newUser,
+            @RequestPart(value = "image", required = false) MultipartFile file) throws IOException {
 
-    System.out.println("IN controller");
-    System.out.println("Received User: " + newUser);
-    if (file == null || file.isEmpty()) {
-        System.out.println("File is missing!");
-        return ResponseEntity.badRequest().body(null);
-    } else {
-        System.out.println("File received: " + file.getOriginalFilename());
+        if (file == null || file.isEmpty()) {
+            System.out.println("File is missing!");
+            return ResponseEntity.badRequest().body(null);
+        } else {
+            System.out.println("File received: " + file.getOriginalFilename());
+        }
+
+        return ResponseEntity.ok(authService.register(newUser, file));
     }
-
-    return ResponseEntity.ok(authService.register(newUser, file));
-}
 
 }

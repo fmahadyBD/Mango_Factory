@@ -4,7 +4,7 @@ import java.sql.Date;
 import java.util.Collection;
 import java.util.List;
 
-
+import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,23 +28,22 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements UserDetails{
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    
+
     @Column(nullable = false)
     private String name;
 
-    @Column(unique = true,nullable = false)
+    @Column(unique = true, nullable = false)
     private String email;
 
     @Column(nullable = false)
     private String password;
 
-
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false, unique = true)
     private String phone;
 
     private String address;
@@ -53,7 +52,7 @@ public class User implements UserDetails{
     private boolean active;
     private boolean isLock;
     private boolean nonExpired;
-    
+
     @Enumerated(value = EnumType.STRING)
     private Gender gender;
 
@@ -70,32 +69,33 @@ public class User implements UserDetails{
 
     @Override
     public String getUsername() {
-        return this.email;
+        return email;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return this.nonExpired;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return !this.isLock;
+        return isLock;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        
+
         return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return this.active;
+        return active;
     }
 
-   
+    @Override
+    public String getPassword() {
+        return password;
+    }
 
-
-    
 }
