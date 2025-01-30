@@ -31,23 +31,40 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthenticationFilter authenticationFilter;
 
+    // @Bean
+    // public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    //     return http
+    //             .csrf(AbstractHttpConfigurer::disable)
+    //             .cors(Customizer.withDefaults())
+    //             .authorizeHttpRequests(req -> req
+    //                     .requestMatchers("/**").permitAll()
+    //             // .requestMatchers("/auth/**", "/","/login/**","/register/**").permitAll()
+    //             // .requestMatchers("/admin/api/**").hasAnyAuthority("ADMIN")
+    //             // .requestMatchers("/user/api/**").hasAnyAuthority("USER")
+    //             // .requestMatchers("/sells/api/**").hasAnyAuthority("SELLS")
+
+    //             )
+    //             .userDetailsService(userService)
+    //             .sessionManagement(
+    //                     section -> section.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+    //             .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
+    //             .build();
+    // }
+
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
-                .authorizeHttpRequests(req -> req
-                        .requestMatchers("/auth/**", "/").permitAll()
-                        .requestMatchers("/admin/api/**").hasAnyAuthority("ADMIN")
-                        .requestMatchers("/user/api/**").hasAnyAuthority("USER")
-                        .requestMatchers("/sells/api/**").hasAnyAuthority("SELLS")
-
-                )
+                    .authorizeHttpRequests(req ->                            
+                    req.requestMatchers("/**","/image/**").permitAll()             )
                 .userDetailsService(userService)
                 .sessionManagement(
-                        section -> section.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
+
     }
 
     @Bean
@@ -60,17 +77,17 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
+
     @Bean
-    public CorsConfigurationSource configurationSource() {
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+        configuration.setAllowedOrigins(List.of("http://localhost:4200", "http://127.0.0.1:4200"));
         configuration.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Cache_Control", "Content-type"));
         configuration.setAllowCredentials(true);
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-
     }
-
 }
