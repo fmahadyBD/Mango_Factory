@@ -8,6 +8,7 @@ import { AuthService } from './auth.service';
 })
 export class GetAllUserService {
   baseUrl: string = "http://localhost:8080/admin/user/get-all";
+  mainbaseUrl:string="http://localhost:8080/admin/user";
 
   constructor(
     private httpClint: HttpClient,
@@ -31,7 +32,7 @@ export class GetAllUserService {
 
   // }
 
-  
+
   getAllUsers(page: number, size: number): Observable<any> {
     if (this.authService.isLoggedIn()) {
       if (this.authService.isAdmin()) {
@@ -53,5 +54,21 @@ export class GetAllUserService {
   private handelError(error: any) {
     console.log("an error in get all user in service", error);
     return throwError(() => new Error(error.message || "Servcer Error"));
+  }
+
+  deleteUser(id: number): Observable<any> {
+    if (this.authService.isLoggedIn()) {
+      if (this.authService.isAdmin()) {
+        return this.httpClint.delete(this.mainbaseUrl + '/'+id)
+          .pipe(
+            catchError(this.handelError)
+          );
+      } else {
+        return throwError(() => new Error("User is not admin"));
+      }
+
+    } else {
+      return throwError(() => new Error("Acount is not loggin"));
+    }
   }
 }
