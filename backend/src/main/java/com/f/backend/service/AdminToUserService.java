@@ -19,6 +19,8 @@ import com.f.backend.entity.User;
 import com.f.backend.repository.TokenRepository;
 import com.f.backend.repository.UserRepository;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @Service
 public class AdminToUserService {
 
@@ -39,22 +41,33 @@ public class AdminToUserService {
         Pageable pageable = PageRequest.of(page, size);
         return userRepository.findAll(pageable);
     }
-
+   
+   
+   
+    @Transactional
     public void deleteUser(long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("Not found the user by this ID: " + id));
-        deleteUserImage(user.getImage());
+
+        // Explicitly remove all tokens before deleting user
         removeAllTokenByUser(user);
-        userRepository.delete(user);
-        return;
+        
+        // Ensure tokens are actually deleted
+        tokenRepository.flush(); 
+        
+        // Now proceed with deleting the user
+        deleteUserImage(user.getImage());
+        userRepository.delete(user);  // Ensure this happens after tokens are deleted
     }
 
+
+    
     private void deleteUserImage(String imageFileName) {
         if (imageFileName == null || imageFileName.isEmpty()) {
             return;
         }
         try {
-            Path imagePath = Paths.get(uploadDir, imageFileName);
+            Path imagePath = Paths.get(uploadDir, "users", imageFileName);
             if (Files.exists(imagePath)) {
                 Files.delete(imagePath);
             }
@@ -63,12 +76,12 @@ public class AdminToUserService {
         }
     }
 
-    public void removeAllTokenByUser(User user){
-        List<Token> tokens= tokenRepository.findAllTokenByUser(user.getId());
-        if(tokens.isEmpty()) return;
 
-        tokenRepository.deleteAll(tokens);;
+
+
+    @Transactional
+    public void removeAllTokenByUser(User user) {
+        tokenRepository.deleteAllByUser_Id(user.getId());
     }
-
     
 }

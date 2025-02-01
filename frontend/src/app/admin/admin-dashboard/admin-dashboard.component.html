@@ -1,1 +1,102 @@
-<p>admin-dashboard works!</p>
+<div class="d-flex" id="wrapper">
+    <div class="bg-dark text-white p-3 vh-100" style="width: 250px;">
+        <h4 class="text-center">Admin Panel</h4>
+        <hr>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a href="#" class="nav-link text-white">Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a href="/get-all-users" class="nav-link text-white">Users</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link text-white">Reports</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link text-white">Settings</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Page Content -->
+    <div class="container-fluid p-0">
+        <!-- Top Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Admin Dashboard</a>
+                <button *ngIf="isLoggedIn" class="btn btn-danger" (click)="logout()">Logout</button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card text-white bg-primary mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Users</h5>
+                            <p class="card-text">1,200</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-success mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Revenue</h5>
+                            <p class="card-text">$12,345</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-warning mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Orders</h5>
+                            <p class="card-text">320</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-danger mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Support Tickets</h5>
+                            <p class="card-text">45</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table Section -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Recent Users</h5>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>John Doe</td>
+                                        <td>johnexample.com</td>
+                                        <td>Admin</td>
+                                    </tr>
+                                   
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div> <!-- Container end -->
+    </div> <!-- Page Content end -->
+</div> <!-- Wrapper end -->
