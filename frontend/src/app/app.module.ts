@@ -10,6 +10,8 @@ import { LoginComponent } from './auth/login/login.component';
 import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 import { UserDashboardComponent } from './user/user-dashboard/user-dashboard.component';
 import { GetAllUsersComponent } from './admin/get-all-users/get-all-users.component';
+import { HomeComponent } from './home/home.component';
+import { NavbarComponent } from './navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,9 @@ import { GetAllUsersComponent } from './admin/get-all-users/get-all-users.compon
     LoginComponent,
     AdminDashboardComponent,
     UserDashboardComponent,
-    GetAllUsersComponent
+    GetAllUsersComponent,
+    HomeComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,

@@ -27,7 +27,7 @@ export class GetAllUsersComponent implements OnInit {
 
 
   loadAllUsers() {
-    this.getallUserService.getAllUsers(this.currentPage-1, this.itemsPerPage).subscribe({
+    this.getallUserService.getAllUsers(this.currentPage - 1, this.itemsPerPage).subscribe({
       next: res => {
         this.users = res.content;
         this.totalItems = res.totalElements;
@@ -38,12 +38,27 @@ export class GetAllUsersComponent implements OnInit {
     })
   }
 
-  onPageChange(page:number){
-    this.currentPage=page;
+  onPageChange(page: number) {
+    this.currentPage = page;
     this.loadAllUsers();
   }
 
   get totalPages(): number {
-    return Math.ceil(this.totalItems/this.itemsPerPage);
+    return Math.ceil(this.totalItems / this.itemsPerPage);
+  }
+
+  deleteUser(id: number) {
+    this.getallUserService.deleteUser(id).subscribe({
+      next: res => {
+        console.log("Successfully Delete ", res);
+
+        // remove the deleted user from the list
+        this.users = this.users.filter(user => user.id != id);
+        this.totalItems -= 1
+      },
+      error: ee => {
+        console.log(ee);
+      }
+    })
   }
 }
