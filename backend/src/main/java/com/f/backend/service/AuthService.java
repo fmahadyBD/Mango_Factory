@@ -112,20 +112,7 @@ public class AuthService {
 
     }
 
-    // public AuthenticationResponse authenticate(LoginForm requet) {
-
-
-        
-    //     authenticationManager.authenticate(
-    //             new UsernamePasswordAuthenticationToken(requet.getEmail(), requet.getPassword()));
-    //     User user = userRepository.findByEmail(requet.getEmail()).orElseThrow();
-
-    //     String jwt = jwtService.generateToken(user);
-    //     removedAllTokenByUser(user);
-
-    //     savedToken(jwt, user);
-    //     return new AuthenticationResponse(jwt, "User login Successfull");
-    // }
+    
 
 
         public AuthenticationResponse authenticate(LoginForm request) {
