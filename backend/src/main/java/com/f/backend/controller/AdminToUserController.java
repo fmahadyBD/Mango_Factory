@@ -12,8 +12,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.f.backend.entity.User;
@@ -60,5 +62,28 @@ public class AdminToUserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @PutMapping("/{id}/role")
+    public ResponseEntity<Map<String, String>> updateTheRole(
+            @PathVariable long id,
+            @RequestParam String role) { // Use @RequestParam for simple query parameters
+        Map<String, String> response = new HashMap<>();
+    
+        try {
+            adminToUserService.changeRole(id, role);
+            response.put("message", "Role updated successfully");
+            return ResponseEntity.ok(response);
+        } catch (UsernameNotFoundException e) {
+            response.put("error", "User not found with ID: " + id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response); // Return 404 for user not found
+        } catch (IllegalArgumentException e) {
+            response.put("error", "Invalid role: " + role);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response); // Return 400 for invalid role
+        } catch (Exception e) {
+            response.put("error", "Failed to update role: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response); // Return 500 for other errors
+        }
+    }
+
 
 }
