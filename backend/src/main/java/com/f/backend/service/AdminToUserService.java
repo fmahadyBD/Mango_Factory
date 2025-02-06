@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +19,7 @@ import com.f.backend.entity.Token;
 import com.f.backend.entity.User;
 import com.f.backend.repository.TokenRepository;
 import com.f.backend.repository.UserRepository;
+import com.f.backend.enums.Role;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,9 +43,7 @@ public class AdminToUserService {
         Pageable pageable = PageRequest.of(page, size);
         return userRepository.findAll(pageable);
     }
-   
-   
-   
+
     @Transactional
     public void deleteUser(long id) {
         User user = userRepository.findById(id)
@@ -51,17 +51,15 @@ public class AdminToUserService {
 
         // Explicitly remove all tokens before deleting user
         removeAllTokenByUser(user);
-        
+
         // Ensure tokens are actually deleted
-        tokenRepository.flush(); 
-        
+        tokenRepository.flush();
+
         // Now proceed with deleting the user
         deleteUserImage(user.getImage());
-        userRepository.delete(user);  // Ensure this happens after tokens are deleted
+        userRepository.delete(user); // Ensure this happens after tokens are deleted
     }
 
-
-    
     private void deleteUserImage(String imageFileName) {
         if (imageFileName == null || imageFileName.isEmpty()) {
             return;
@@ -76,12 +74,18 @@ public class AdminToUserService {
         }
     }
 
-
-
-
     @Transactional
     public void removeAllTokenByUser(User user) {
         tokenRepository.deleteAllByUser_Id(user.getId());
     }
-    
+
+    public void changeRole(long id, String roleName) {
+        Role role = Role.valueOf(roleName.toUpperCase());
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found by this id"));
+        user.setRole(role);
+
+
+    }
+
 }
