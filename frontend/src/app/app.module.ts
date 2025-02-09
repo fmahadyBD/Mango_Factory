@@ -12,6 +12,7 @@ import { UserDashboardComponent } from './user/user-dashboard/user-dashboard.com
 import { GetAllUsersComponent } from './admin/get-all-users/get-all-users.component';
 import { HomeComponent } from './home/home.component';
 import { NavbarComponent } from './navbar/navbar.component';
+import { DashboardComponent } from './admin/dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { NavbarComponent } from './navbar/navbar.component';
     UserDashboardComponent,
     GetAllUsersComponent,
     HomeComponent,
-    NavbarComponent
+    NavbarComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
