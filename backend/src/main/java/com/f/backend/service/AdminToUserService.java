@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,14 +13,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.f.backend.entity.Token;
 import com.f.backend.entity.User;
+import com.f.backend.enums.Role;
 import com.f.backend.repository.TokenRepository;
 import com.f.backend.repository.UserRepository;
-import com.f.backend.enums.Role;
-
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AdminToUserService {

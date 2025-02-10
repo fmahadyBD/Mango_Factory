@@ -13,6 +13,10 @@ import { GetAllUsersComponent } from './admin/get-all-users/get-all-users.compon
 import { HomeComponent } from './home/home.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { DashboardComponent } from './admin/dashboard/dashboard.component';
+import { ViewAboutComponent } from './about/view-about/view-about.component';
+import { ContentManageAboutComponent } from './about/content-manage-about/content-manage-about.component';
+import { ViewContactComponent } from './contact/view-contact/view-contact.component';
+import { ManageContactComponent } from './contact/manage-contact/manage-contact.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +28,11 @@ import { DashboardComponent } from './admin/dashboard/dashboard.component';
     GetAllUsersComponent,
     HomeComponent,
     NavbarComponent,
-    DashboardComponent
+    DashboardComponent,
+    ViewAboutComponent,
+    ContentManageAboutComponent,
+    ViewContactComponent,
+    ManageContactComponent
   ],
   imports: [
     BrowserModule,
