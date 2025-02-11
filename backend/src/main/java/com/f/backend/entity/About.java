@@ -10,16 +10,11 @@ import lombok.Setter;
 @Getter
 public class About {
     @Id
-    private long id=1L;
+    private long id = 1L;
     private String header;
-    private String road;
-    private String house;
-    private String phone;
-    private String zila;
+    private String address;
 
     private String description;
     private String cover;
-    private String Offcieimage;
 
-    
 }

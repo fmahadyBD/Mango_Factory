@@ -28,31 +28,27 @@ public class AboutService {
     }
 
     @Transactional
-    public About saveOrUpdate(About about, MultipartFile cover, MultipartFile officemage) throws IOException {
+    public About saveOrUpdate(About about, MultipartFile cover) throws IOException {
         About oldAbout = aboutRepository.findById(1L).orElse(new About());
 
-        if (about.getHeader() != null) oldAbout.setHeader(about.getHeader());
-        if (about.getRoad() != null) oldAbout.setRoad(about.getRoad());
-        if (about.getHouse() != null) oldAbout.setHouse(about.getHouse());
-        if (about.getPhone() != null) oldAbout.setPhone(about.getPhone());
-        if (about.getZila() != null) oldAbout.setZila(about.getZila());
-        if (about.getDescription() != null) oldAbout.setDescription(about.getDescription());
-
+        if (about.getHeader() != null)
+            oldAbout.setHeader(about.getHeader());
+        if (about.getAddress() != null)
+            oldAbout.setAddress(about.getAddress());
+        if (about.getDescription() != null)
+            oldAbout.setDescription(about.getDescription());
+        
         if (cover != null && !cover.isEmpty()) {
             String coverName = saveImage(cover);
             oldAbout.setCover(coverName);
-        }
-
-        if (officemage != null && !officemage.isEmpty()) {
-            String officeImageName = saveImage(officemage);
-            oldAbout.setOffcieimage(officeImageName);
         }
 
         return aboutRepository.save(oldAbout);
     }
 
     private String saveImage(MultipartFile file) throws IOException {
-        if (file.isEmpty()) return null;
+        if (file.isEmpty())
+            return null;
 
         Path uploadPath = Paths.get(uploadDir, "about");
         if (!Files.exists(uploadPath)) {
@@ -60,7 +56,8 @@ public class AboutService {
         }
 
         String originalFilename = file.getOriginalFilename();
-        String fileExtension = originalFilename != null ? originalFilename.substring(originalFilename.lastIndexOf(".")) : "";
+        String fileExtension = originalFilename != null ? originalFilename.substring(originalFilename.lastIndexOf("."))
+                : "";
         String fileName = "1_" + UUID.randomUUID() + fileExtension;
 
         Path filePath = uploadPath.resolve(fileName);
